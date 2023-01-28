@@ -1,3 +1,8 @@
+class Order(enum.Enum):
+    '''кто ходит'''
+    player = 0
+    cpu = 1
+
 class Game:
     '''
     игра спички
@@ -12,7 +17,8 @@ class Game:
     def __init__(self):
         self.gamestatus = False
         self.heap = 50
-
+        self.act = Order.player
+        
     def action_player(self, count_items):
         '''
         возвращает результат:
@@ -70,5 +76,13 @@ class Game:
     def check_game_state(self):
         return self.heap
     
-    
+    def tik(self):
+        '''циклический ход игры'''
+        if act==Order.cpu:
+            # ход компьютера
+            pass
+        else:
+            # ход игрока
+            pass
+        
         
