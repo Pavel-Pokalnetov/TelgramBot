@@ -1,0 +1,9 @@
+# telegram-bot token
+TOKEN = ''
+
+# openweatermap 
+# API key
+APIKEY=''
+# city
+CITY = 'Salekhard,RU'
+CITY_ID = '1493197'

@@ -2,13 +2,20 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
 from config import TOKEN
-from func import calcrun
+from func import calcrun, days2NY, getweather
 
 '''https://docs.python-telegram-bot.org/en/stable/index.html'''
 
+app = ApplicationBuilder().token(TOKEN).build()
 
-async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(f'Hello {update.effective_user.first_name}')
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    botcommand = ['/calc выражение - математический калькулятор',
+                  '/D2NY - сколько осталось до нового года',
+                  '/GW - погода в Салехарде',
+                  '/echo -  эхо-ответ: что получил то и послал',]
+
+    await update.message.reply_text('Команды бота:\n{}'.format('\n'.join(botcommand)))
 
 
 async def calc(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -19,12 +26,22 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(f'{update.message.text}')
 
 
-app = ApplicationBuilder().token(TOKEN).build()
+async def day2NewYear(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text(f'{days2NY()}')
 
-app.add_handler(CommandHandler("hello", hello))
+async def getweath(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text(f'{getweather()}')
+
+
+app.add_handler(CommandHandler("GW", getweath))
+
+app.add_handler(CommandHandler("start", start))
 
 app.add_handler(CommandHandler("calc", calc))
 
-app.add_handler(CommandHandler("test", echo))
+app.add_handler(CommandHandler("echo", echo))
+
+app.add_handler(CommandHandler("D2NY", day2NewYear))
+
 
 app.run_polling()
