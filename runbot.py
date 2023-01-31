@@ -15,7 +15,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                   '/GW - погода в Салехарде',
                   '/echo -  эхо-ответ: что получил то и послал',
                   '/GAME - игра 50 спичек']
-
     await update.message.reply_text('Команды бота:\n{}'.format('\n'.join(botcommand)))
 
 
@@ -36,6 +35,7 @@ async def getweath(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def message_processing(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Обработка сырого текста в чате"""
     if update.message.text[0] != '/':
         if game.gamestatus:
             # запущена игра
@@ -56,6 +56,7 @@ async def message_processing(update: Update, context: ContextTypes.DEFAULT_TYPE)
             message = f'На столе {game.heap} спичек.'
             await update.message.reply_text(message)
             sleep(1)
+            # ход компьютера
             message = f'Я взял {game.action_cpu()} спичек\n'
             await update.message.reply_text(message)
             message = f'На столе {game.heap} спичек.'
@@ -70,13 +71,14 @@ async def message_processing(update: Update, context: ContextTypes.DEFAULT_TYPE)
             await update.message.reply_text(message)
             return
 
+
 async def gamestart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """старт игры"""
     if not game.gamestatus:
         game.start()
         message = game.help
         await update.message.reply_text(message)
         message = f'Игра началась.\nНа столе {game.heap} спичек\n'
-
         if randint(1, 100) > 50:
             message = 'Я хожу первый\n'
             message += f'Я взял {game.action_cpu()}\n'
@@ -90,14 +92,11 @@ async def gamestart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 app = ApplicationBuilder().token(TOKEN).build()
 app.add_handler(CommandHandler("GW", getweath))
 app.add_handler(CommandHandler("start", start))
+app.add_handler(CommandHandler("help", start))
 app.add_handler(CommandHandler("calc", calc))
 app.add_handler(CommandHandler("echo", echo))
 app.add_handler(CommandHandler("D2NY", day2NewYear))
 app.add_handler(CommandHandler("GAME", gamestart))
-
 app.add_handler(MessageHandler(None, message_processing))
-
-game = Game()
-
-
+game = Game()  # создаем игру
 app.run_polling()
