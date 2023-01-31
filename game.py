@@ -1,4 +1,5 @@
 import enum
+from random import random
 
 
 class Order(enum.Enum):
@@ -24,16 +25,28 @@ class Game:
         self.heap = 50
         '''число спичек в куче'''
         self.act = Order.player
-        '''чей ход
-        cpu
-        player'''
+        '''чей ход: cpu/player'''
+    def game_start(self):
+        self.gamestatus = True
+        self.heap = 50
 
     def action_player(self, count_items):
-        ''' ход игрока
+        """
+        ход игрока
         возвращает результат:
             -1 - неверное количество спичек
              0 - игрок сделал ход, игра продолжается
              1 - игрок выиграл
+
+        Args:
+            count_items (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
+
+        ''' 
+
         '''
         if self.gamestatus:
             if count_items < 0 or count_items > 8:
@@ -79,44 +92,3 @@ class Game:
         '''проверка на конец игры (0 спичек)'''
         return self.heap == 0
 
-    def tik(self, count_matches_player):
-        '''циклический ход игры'''
-        def matches(number):
-            '''
-            1 - спичка
-            2,3,4 - спички
-            5,6,7,8 - спичек
-            '''
-            result = str(number) + ' спич'
-            if number == 1:
-                result += 'ка'
-            elif 1 < number < 5:
-                result += 'ки'
-            else:
-                result += 'ек'
-            return result
-
-        if (self.gamestatus()):
-            if act == Order.cpu:
-                # ход компьютера
-                state = self.action_cpu()
-                if state[0] == 1:
-                    # компьютер выиграл
-                    self.gamestatus = False
-                    return ('Ход компьютера - {},\n'
-                            'осталось 0 спичек,\n'
-                            'Вы проиграли'.format(matches(state[1])))
-                else:
-                    return ('Ход компьютера - {},\n'
-                            'осталось {} спичек,\n'
-                            'Ваш ход'.format(matches(state[1]), self.heap))
-                act = Order.player
-            else:
-                # ход игрока
-                state = self.action_player(count_matches_player)
-                if state[0] == '1':
-                    # игрок выиграл
-                    self.gamestatus == False
-                    return ("Вы выиграли")
-                elif state[0] == '0':
-                    pass
