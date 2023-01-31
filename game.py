@@ -1,5 +1,5 @@
 import enum
-from random import random
+from random import randint
 
 
 class Order(enum.Enum):
@@ -15,6 +15,9 @@ class Game:
     за ход можно забрать не более 8 спичек
     выигрывает то, забрал последние спички со стола
     '''
+    help = ('Игра 50 спичек.\n'
+            'Правила: на столе лежат 50 спичек. Каждый по очереди берет из кучки от одной до восьми спичек\n'
+            'Выигрывает тот, кто заберет последние спички из кучки')
 
     heap: int  # куча спичек
     gamestatus: bool  # состояние игры
@@ -26,69 +29,63 @@ class Game:
         '''число спичек в куче'''
         self.act = Order.player
         '''чей ход: cpu/player'''
-    def game_start(self):
+
+    def start(self):
+        """старт игры
+        """
         self.gamestatus = True
         self.heap = 50
 
-    def action_player(self, count_items):
+    def stop(self):
+        """остановка игры
         """
-        ход игрока
-        возвращает результат:
-            -1 - неверное количество спичек
-             0 - игрок сделал ход, игра продолжается
-             1 - игрок выиграл
+        self.gamestatus = False
 
+    def action_player(self, count_items):
+        """ход игрока
         Args:
-            count_items (_type_): _description_
+            count_items (_type_): число спичек, которые взял игрок
 
         Returns:
-            _type_: _description_
+            _type_: возвращает результат:
+                -1 - неверное количество спичек
+                 0 - игрок сделал ход, игра продолжается
+                 1 - игрок выиграл
         """
-
-        ''' 
-
-        '''
         if self.gamestatus:
-            if count_items < 0 or count_items > 8:
-                # игрок взял неверное число спичек
-                return [-1]
-            elif self.heap-count_items == 0:
-                # игрок выиграл
-                self.heap = 0
-                return [1]
-            elif self.heap-count_items < 0:
-                # игрок выбрал больше чем есть
-                pass
-                return [-1]
-            else:
-                # игрок сделал ход
-                self.heap -= count_items
-                return [0]
+            # игрок сделал ход
+            self.heap -= count_items
+            return
         else:
             pass
 
     def action_cpu(self):
-        '''ход компьютера'''
+        """ход компьютера
+        Returns:
+            _type_: _description_
+        """
         if self.gamestatus:
             if self.heap <= 8:
                 # компьютер выиграл
                 count = self.heap
                 self.heap = 0
-                return [1, count]
-            elif self.heap-9 <= 8:
+                return count
+            elif 9 < self.heap < 18:
                 # предвыигрышный ход
                 count = self.heap-9
                 self.heap -= count
-                return [0, count]
+                return count
             else:
                 # обычный ход
-                count = random.randint(1, 8)
+                count = randint(1, 8)
                 self.heap -= count
-                return [0, count]
+                return count
         else:
             pass
 
-    def check_game_state():
-        '''проверка на конец игры (0 спичек)'''
+    def check_game_state(self):
+        """проверка на конец игры (0 спичек)
+        Returns:
+            _type_: _description_
+        """
         return self.heap == 0
-

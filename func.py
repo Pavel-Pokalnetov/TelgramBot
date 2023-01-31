@@ -24,11 +24,8 @@ def getweather():
         weather = "Погода в Cалехарде\nОблачность: {}\n".format(
             data['weather'][0]['description'])
         weather += "Температура: {} °С".format(data['main']['temp'])
-        print(weather)
+        # print(weather)
         return (weather)
     except Exception as e:
         print("Exception (weather):", e)
 
-
-if __name__=='__main__':
-    getweather()
