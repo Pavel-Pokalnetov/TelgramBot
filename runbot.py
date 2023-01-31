@@ -31,18 +31,20 @@ async def day2NewYear(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 async def getweath(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(f'{getweather()}')
 
+
 async def message_processing(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if update.message.text[0] !='/': 
         await update.message.reply_text('Просто текст')
 
-if __name__ == '__main__':
-    app = ApplicationBuilder().token(TOKEN).build()
-    app.add_handler(CommandHandler("GW", getweath))
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("calc", calc))
-    app.add_handler(CommandHandler("echo", echo))
-    app.add_handler(CommandHandler("D2NY", day2NewYear))
-    
-    app.add_handler(MessageHandler(None,message_processing))
-    
-    app.run_polling()
+
+
+app = ApplicationBuilder().token(TOKEN).build()
+app.add_handler(CommandHandler("GW", getweath))
+app.add_handler(CommandHandler("start", start))
+app.add_handler(CommandHandler("calc", calc))
+app.add_handler(CommandHandler("echo", echo))
+app.add_handler(CommandHandler("D2NY", day2NewYear))
+
+app.add_handler(MessageHandler(None,message_processing))
+
+app.run_polling()
