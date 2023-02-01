@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler
 from time import sleep
 from config import TOKEN
-from func import calcrun, days2NY, getweather
+from func import calcrun, days2NY, get_aurora, getweather
 from game import Game
 from random import randint
 
@@ -14,7 +14,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                   '/D2NY - сколько осталось до нового года',
                   '/GW - погода в Салехарде',
                   '/echo -  эхо-ответ: что получил то и послал',
-                  '/GAME - игра 50 спичек']
+                  '/GAME - игра 50 спичек',
+                  '/AURORA - прогноз полярных сияний']
     await update.message.reply_text('Команды бота:\n{}'.format('\n'.join(botcommand)))
 
 
@@ -88,15 +89,25 @@ async def gamestart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             message = 'Ваш ход'
             await update.message.reply_text(message)
 
+async def getaurora(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    aurora = get_aurora()
+    if aurora==None:
+        await update.message.reply_text('Данные не получены')
+        return
+    await update.message.reply_photo(aurora)
+    
 
 app = ApplicationBuilder().token(TOKEN).build()
 app.add_handler(CommandHandler("GW", getweath))
+app.add_handler(CommandHandler("AURORA",getaurora))
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("help", start))
 app.add_handler(CommandHandler("calc", calc))
 app.add_handler(CommandHandler("echo", echo))
 app.add_handler(CommandHandler("D2NY", day2NewYear))
 app.add_handler(CommandHandler("GAME", gamestart))
+
 app.add_handler(MessageHandler(None, message_processing))
 game = Game()  # создаем игру
+
 app.run_polling()

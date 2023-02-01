@@ -29,3 +29,20 @@ def getweather():
     except Exception as e:
         print("Exception (weather):", e)
 
+
+
+
+def get_aurora():
+    """прогноз полярных сияний
+    https://services.swpc.noaa.gov/"""
+    try:
+        p = requests.get("https://services.swpc.noaa.gov/images/aurora-forecast-northern-hemisphere.jpg")
+        out = open("aurora.jpg", "wb")
+        out.write(p.content)
+        out.close()
+    except:
+        return(None)
+    return("aurora.jpg")
+
+if __name__== "__main__":
+    aurora()
