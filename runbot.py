@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler
 from time import sleep
 from config import TOKEN
-from func import calcrun, days2NY, get_aurora, getweather
+from func import days2NY, get_aurora, getweather
 from game import Game
 from random import randint
 
@@ -10,21 +10,11 @@ from random import randint
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    botcommand = ['/calc выражение - математический калькулятор',
-                  '/D2NY - сколько осталось до нового года',
+    botcommand = ['/D2NY - сколько осталось до нового года',
                   '/GW - погода в Салехарде',
-                  '/echo -  эхо-ответ: что получил то и послал',
                   '/GAME - игра 50 спичек',
                   '/AURORA - прогноз полярных сияний']
     await update.message.reply_text('Команды бота:\n{}'.format('\n'.join(botcommand)))
-
-
-async def calc(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(calcrun(update.message.text.split(" ")[1]))
-
-
-async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(f'{update.message.text}')
 
 
 async def day2NewYear(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -89,20 +79,20 @@ async def gamestart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             message = 'Ваш ход'
             await update.message.reply_text(message)
 
+
 async def getaurora(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     aurora = get_aurora()
-    if aurora==None:
+    if aurora == None:
         await update.message.reply_text('Данные не получены')
         return
     await update.message.reply_photo(aurora)
-    
+
 
 app = ApplicationBuilder().token(TOKEN).build()
 app.add_handler(CommandHandler("GW", getweath))
-app.add_handler(CommandHandler("AURORA",getaurora))
+app.add_handler(CommandHandler("AURORA", getaurora))
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("help", start))
-app.add_handler(CommandHandler("calc", calc))
 app.add_handler(CommandHandler("echo", echo))
 app.add_handler(CommandHandler("D2NY", day2NewYear))
 app.add_handler(CommandHandler("GAME", gamestart))

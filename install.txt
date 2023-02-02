@@ -1,0 +1,7 @@
+Installing
+
+$ python -m venv .venv
+$ .venv\scripts\activate.bat
+(.venv)$ pip install python-telegram-bot --upgrade
+
+

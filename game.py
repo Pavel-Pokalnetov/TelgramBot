@@ -24,7 +24,7 @@ class Game:
 
     def __init__(self):
         self.gamestatus = False
-        '''состояние игрв (продолжается)'''
+        '''начальное состояние игры (остановлена)'''
         self.heap = 50
         '''число спичек в куче'''
         self.act = Order.player
@@ -44,13 +44,7 @@ class Game:
     def action_player(self, count_items):
         """ход игрока
         Args:
-            count_items (_type_): число спичек, которые взял игрок
-
-        Returns:
-            _type_: возвращает результат:
-                -1 - неверное количество спичек
-                 0 - игрок сделал ход, игра продолжается
-                 1 - игрок выиграл
+            count_items (int): число спичек, которые взял игрок
         """
         if self.gamestatus:
             # игрок сделал ход
@@ -62,7 +56,7 @@ class Game:
     def action_cpu(self):
         """ход компьютера
         Returns:
-            _type_: _description_
+            int : число спичек, которые взял компьютер
         """
         if self.gamestatus:
             if self.heap <= 8:
@@ -81,11 +75,13 @@ class Game:
                 self.heap -= count
                 return count
         else:
-            pass
+            return 0
 
     def check_game_state(self):
         """проверка на конец игры (0 спичек)
         Returns:
-            _type_: _description_
+            True: конец игры (спички не закончилсь)
+            False: игра продолжается (спички не закончилсь)
         """
         return self.heap == 0
+    
