@@ -93,7 +93,6 @@ app.add_handler(CommandHandler("GW", getweath))
 app.add_handler(CommandHandler("AURORA", getaurora))
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("help", start))
-app.add_handler(CommandHandler("echo", echo))
 app.add_handler(CommandHandler("D2NY", day2NewYear))
 app.add_handler(CommandHandler("GAME", gamestart))
 
