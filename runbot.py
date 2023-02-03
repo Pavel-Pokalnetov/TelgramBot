@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler
 from time import sleep
 from config import TOKEN
-from func import days2NY, get_aurora, getweather
+from func import days2NY, engrusdict, get_aurora, getweather
 from game import Game
 from random import randint
 
@@ -13,7 +13,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     botcommand = ['/D2NY - сколько осталось до нового года',
                   '/GW - погода в Салехарде',
                   '/GAME - игра 50 спичек',
-                  '/AURORA - прогноз полярных сияний']
+                  '/AURORA - прогноз полярных сияний',
+                  '/ENG - изучение английских слов',
+                  '/help - список команд']
     await update.message.reply_text('Команды бота:\n{}'.format('\n'.join(botcommand)))
 
 
@@ -87,10 +89,13 @@ async def getaurora(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
     await update.message.reply_photo(aurora)
 
+async def getruseng(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text(engrusdict(),parse_mode="Markdown")
 
 app = ApplicationBuilder().token(TOKEN).build()
 app.add_handler(CommandHandler("GW", getweath))
 app.add_handler(CommandHandler("AURORA", getaurora))
+app.add_handler(CommandHandler("ENG", getruseng))
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("help", start))
 app.add_handler(CommandHandler("D2NY", day2NewYear))

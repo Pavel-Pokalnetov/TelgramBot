@@ -1,4 +1,6 @@
+from random import randint
 from datetime import datetime
+import sqlite3
 import requests
 
 
@@ -30,19 +32,33 @@ def getweather():
         print("Exception (weather):", e)
 
 
-
-
 def get_aurora():
     """прогноз полярных сияний
     https://services.swpc.noaa.gov/"""
     try:
-        p = requests.get("https://services.swpc.noaa.gov/images/aurora-forecast-northern-hemisphere.jpg")
+        p = requests.get(
+            "https://services.swpc.noaa.gov/images/aurora-forecast-northern-hemisphere.jpg")
         out = open("aurora.jpg", "wb")
         out.write(p.content)
         out.close()
     except:
-        return(None)
-    return("aurora.jpg")
+        return (None)
+    return ("aurora.jpg")
 
-if __name__== "__main__":
-    aurora()
+
+def engrusdict()->str:
+    randlist = ",".join(list([str(randint(0, 51380)) for _ in range(5)]))
+    with sqlite3.connect('dict.db') as conn:
+        cur = conn.cursor()
+        request = f"""SELECT id,engword,rusword FROM dict WHERE id IN ({randlist});"""
+        cur.execute(request)
+        result = cur.fetchall()
+    txt = ''
+    for _, engword, rusword in result:
+        txt +='**{}**\n - {}\n\n'.format(engword,rusword.replace('|','\n - '))
+    return txt
+
+
+if __name__ == "__main__":
+    engrusdict()
+    pass
