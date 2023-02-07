@@ -27,7 +27,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def day2NewYear(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     txt = str(update.message.date.date())+' ' + \
     str(update.message.date.time())+' - ' +\
-    update.message.from_user.name + ' /D2NYT\n'
+    update.message.from_user.name + ' /D2NYT'
     logger(txt, True)
     await update.message.reply_text(f'{days2NY()}')
 
@@ -35,7 +35,7 @@ async def day2NewYear(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 async def getweath(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     txt = str(update.message.date.date())+' ' + \
     str(update.message.date.time())+' - ' +\
-    update.message.from_user.name + ' /GW\n'
+    update.message.from_user.name + ' /GW'
     logger(txt, True)
     await update.message.reply_text(f'{getweather()}')
 
@@ -43,7 +43,7 @@ async def getweath(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def message_processing(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     txt = str(update.message.date.date())+' ' + \
     str(update.message.date.time())+' - ' +\
-    update.message.from_user.name + f' RAWTXT:{update.message.text}\n'
+    update.message.from_user.name + f' RAWTXT:{update.message.text}'
     logger(txt, True)
     """Обработка сырого текста в чате"""
     if update.message.text[0] != '/':
@@ -85,7 +85,7 @@ async def message_processing(update: Update, context: ContextTypes.DEFAULT_TYPE)
 async def gamestart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     txt = str(update.message.date.date())+' ' + \
     str(update.message.date.time())+' - ' +\
-    update.message.from_user.name + ' /GAME\n'
+    update.message.from_user.name + ' /GAME'
     logger(txt, True)    
     """старт игры"""
     if not game.gamestatus:
@@ -106,7 +106,7 @@ async def gamestart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def getaurora(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     txt = str(update.message.date.date())+' ' + \
     str(update.message.date.time())+' - ' +\
-    update.message.from_user.name + ' /AURORA\n'
+    update.message.from_user.name + ' /AURORA'
     logger(txt, True)
     aurora = get_aurora()
     if aurora == None:
@@ -118,7 +118,7 @@ async def getaurora(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def getruseng(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     txt = str(update.message.date.date())+' ' + \
     str(update.message.date.time())+' - ' +\
-    update.message.from_user.name + ' /ENG\n'
+    update.message.from_user.name + ' /ENG'
     logger(txt, True)
     await update.message.reply_text(engrusdict(), parse_mode="Markdown")
 
