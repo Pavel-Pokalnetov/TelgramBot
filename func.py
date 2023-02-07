@@ -3,6 +3,10 @@ from datetime import datetime
 import sqlite3
 import requests
 
+def logger(txt,con=False):
+    with open('bot.log','a',encoding='utf8') as logfile:
+        logfile.writelines(txt+'\n')
+        if con: print(txt)
 
 def calcrun(usrerexp):
     return eval(usrerexp)
