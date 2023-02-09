@@ -18,7 +18,7 @@ def days2NY():
     d = NY-now
     mm, ss = divmod(d.seconds, 60)
     hh, mm = divmod(mm, 60)
-    return ('До нового года: {} дней {} часа {} мин {} сек.'.format(d.days, hh, mm, ss))
+    return 'До нового года: {} дней {} часа {} мин {} сек.'.format(d.days, hh, mm, ss)
 
 
 def getweather():
@@ -46,8 +46,8 @@ def get_aurora():
         out.write(p.content)
         out.close()
     except:
-        return (None)
-    return ("aurora.jpg")
+        return None
+    return "aurora.jpg"
 
 
 def engrusdict()->str:
