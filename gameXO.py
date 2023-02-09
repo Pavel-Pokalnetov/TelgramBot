@@ -3,9 +3,9 @@ class GameX0():
         self.gamestatus = False
 
     def gamestart(self):
-        self.pool = [['1', ' ', '0'],
-                     [' ', '2', ' '],
-                     ['x', ' ', '3']]
+        self.pool = [[' ', ' ', ' '],
+                     [' ', ' ', ' '],
+                     [' ', ' ', ' ']]
         self.gamestatus = True
 
     def gamestop(self):
@@ -38,10 +38,8 @@ class GameX0():
             return 1
         else:
             x = 'ABC'.index(x)
-
         if not 0 <= y < 3:
             return 1
-
         if self.pool[x][y] != ' ':
             return 1
         else:
