@@ -1,3 +1,6 @@
+from random import randint
+
+
 class GameX0():
     def __init__(self):
         self.gamestatus = False
@@ -12,6 +15,7 @@ class GameX0():
         self.gamestatus = False
 
     def set_chip(self, chip):
+        # установка фигруры игрока: X или O
         if chip == 'x':
             self.chip_player = 'x'
             self.chip_cpu = 'o'
@@ -20,6 +24,7 @@ class GameX0():
             self.chip_cpu = 'x'
 
     def print_pool(self) -> str:
+        # вывод игрового поля
         str = '  1 2 3\n' +\
             'A|{}|{}|{}|\n'.format(self.pool[0][0], self.pool[0][1], self.pool[0][2],) +\
             'B|{}|{}|{}|\n'.format(self.pool[1][0], self.pool[1][1], self.pool[1][2],) +\
@@ -29,6 +34,7 @@ class GameX0():
         return str
 
     def run_player(self, cell: str):
+        # ход игрока
         x = cell[0].upper()
         try:
             y = int(cell[1])-1
@@ -67,6 +73,30 @@ class GameX0():
         if diag == 'xxx' or diag == 'ooo':
             return True
         return False
+
+    def run_cpu(self):
+        temp_pool = self.pool
+        for x,y in ((x,y) for x in (0,1,2) for y in (0,1,2)):
+            if temp_pool[x][y]==' ':
+                temp_pool[x][y]=self.chip_cpu
+                if self.check_game_final(temp_pool):
+                    # выигрышный ход
+                    self.pool[x][y]=self.chip_cpu
+                    return
+                temp_pool[x][y]=self.chip_player
+                if self.check_game_final(temp_pool):
+                    # защитный ход
+                    self.pool[x][y]=self.chip_cpu
+                    return
+        while(True):
+            # если защищать нечего и нет выигрышных ходов
+            # то стаивм случайно в свободную клетку
+            x,y = randint(0,2),randint(0,2)
+            if self.pool[x][y]==' ':
+                self.pool[x][y]=self.chip_cpu
+                return
+                
+
 
 
 def test():
