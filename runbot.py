@@ -6,6 +6,8 @@ from func import days2NY, engrusdict, get_aurora, getweather, logger
 from game import Game
 from random import randint
 
+from gameXO import GameX0
+
 '''https://docs.python-telegram-bot.org/en/stable/index.html'''
 
 
@@ -15,35 +17,37 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         str(update.message.date.time())+' - ' +\
         update.message.from_user.name + ' /help (/start)'
     logger(txt, True)
-    botcommand = ('/D2NY - сколько осталось до нового года',
-                  '/GW - погода в Салехарде',
-                  '/GAME - игра 50 спичек',
-                  '/AURORA - прогноз полярных сияний',
-                  '/ENG - изучение английских слов',
-                  '/help - список команд')
+    botcommand = ('/D - сколько осталось до нового года',
+                  '/W - погода в Салехарде',
+                  '/A - прогноз полярных сияний',
+                  '/G1 - игра 50 спичек',
+                  '/G2 - игра крестики-нолики',
+                  '/GR - остановка всех игр',
+                  '/E - изучение английских слов',
+                  '/help(/start) - список команд')
     await update.message.reply_text('Команды бота:\n{}'.format('\n'.join(botcommand)))
 
 
 async def day2NewYear(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     txt = str(update.message.date.date())+' ' + \
-    str(update.message.date.time())+' - ' +\
-    update.message.from_user.name + ' /D2NYT'
+        str(update.message.date.time())+' - ' +\
+        update.message.from_user.name + ' /D2NYT'
     logger(txt, True)
     await update.message.reply_text(f'{days2NY()}')
 
 
 async def getweath(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     txt = str(update.message.date.date())+' ' + \
-    str(update.message.date.time())+' - ' +\
-    update.message.from_user.name + ' /GW'
+        str(update.message.date.time())+' - ' +\
+        update.message.from_user.name + ' /GW'
     logger(txt, True)
     await update.message.reply_text(f'{getweather()}')
 
 
 async def message_processing(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     txt = str(update.message.date.date())+' ' + \
-    str(update.message.date.time())+' - ' +\
-    update.message.from_user.name + f' RAWTXT:{update.message.text}'
+        str(update.message.date.time())+' - ' +\
+        update.message.from_user.name + f' RAWTXT:{update.message.text}'
     logger(txt, True)
     """Обработка сырого текста в чате"""
     if update.message.text[0] != '/':
@@ -83,10 +87,13 @@ async def message_processing(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 
 async def gamestart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if gameX0.gamestatus:
+        await update.message.reply_text('вы не закончили игру крестики нолики')
+        return
     txt = str(update.message.date.date())+' ' + \
-    str(update.message.date.time())+' - ' +\
-    update.message.from_user.name + ' /GAME'
-    logger(txt, True)    
+        str(update.message.date.time())+' - ' +\
+        update.message.from_user.name + ' /GAME'
+    logger(txt, True)
     """старт игры"""
     if not game.gamestatus:
         game.start()
@@ -105,8 +112,8 @@ async def gamestart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def getaurora(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     txt = str(update.message.date.date())+' ' + \
-    str(update.message.date.time())+' - ' +\
-    update.message.from_user.name + ' /AURORA'
+        str(update.message.date.time())+' - ' +\
+        update.message.from_user.name + ' /AURORA'
     logger(txt, True)
     aurora = get_aurora()
     if aurora == None:
@@ -117,21 +124,42 @@ async def getaurora(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def getruseng(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     txt = str(update.message.date.date())+' ' + \
-    str(update.message.date.time())+' - ' +\
-    update.message.from_user.name + ' /ENG'
+        str(update.message.date.time())+' - ' +\
+        update.message.from_user.name + ' /ENG'
     logger(txt, True)
     await update.message.reply_text(engrusdict(), parse_mode="Markdown")
 
+
+async def gameX0start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if game.gamestatus:
+        await update.message.reply_text('вы не закончили игру спички')
+        return
+    if not gameX0.gamestatus:
+        msg = gameX0.gamestart()
+        await update.message.reply_text(msg, parse_mode="Markdown")
+    else:
+        await update.message.reply_text('игра уже идет')
+
+async def game_reset(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    game.stop()
+    gameX0.gamestop()
+    await update.message.reply_text('все игры остановлены')
+
 app = ApplicationBuilder().token(TOKEN).build()
-app.add_handler(CommandHandler("GW", getweath))
-app.add_handler(CommandHandler("AURORA", getaurora))
-app.add_handler(CommandHandler("ENG", getruseng))
+app.add_handler(CommandHandler("W", getweath))
+app.add_handler(CommandHandler("A", getaurora))
+app.add_handler(CommandHandler("E", getruseng))
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("help", start))
-app.add_handler(CommandHandler("D2NY", day2NewYear))
-app.add_handler(CommandHandler("GAME", gamestart))
+app.add_handler(CommandHandler("D", day2NewYear))
+app.add_handler(CommandHandler("G1", gamestart))
+app.add_handler(CommandHandler("G2", gameX0start))
+app.add_handler(CommandHandler("Gr", game_reset))
+
+
 app.add_handler(MessageHandler(None, message_processing))
 
-game = Game()  # создаем игру
+game = Game()  # создаем игру спички
+gameX0 = GameX0()  # создаем игру крестики-нолики
 
 app.run_polling()
