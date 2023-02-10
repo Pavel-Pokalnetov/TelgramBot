@@ -84,6 +84,10 @@ async def message_processing(update: Update, context: ContextTypes.DEFAULT_TYPE)
             message = 'Ваш ход'
             await update.message.reply_text(message)
             return
+        if gameX0.gamestatus:
+            message = gameX0.game_step(update.message.text)
+            await update.message.reply_text(message,parse_mode="Markdown")
+            return
 
 
 async def gamestart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -139,6 +143,7 @@ async def gameX0start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         await update.message.reply_text(msg, parse_mode="Markdown")
     else:
         await update.message.reply_text('игра уже идет')
+
 
 async def game_reset(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     game.stop()
