@@ -156,7 +156,6 @@ app.add_handler(CommandHandler("G1", gamestart))
 app.add_handler(CommandHandler("G2", gameX0start))
 app.add_handler(CommandHandler("Gr", game_reset))
 
-
 app.add_handler(MessageHandler(None, message_processing))
 
 game = Game()  # создаем игру спички
